@@ -70,6 +70,12 @@ Follow the [sim2sim guide](wbt_training/DEPLOY.md) to run the policy. You can
 also use the [automatically exported ONNX pair](wbt_training/README.md#export-to-onnx)
 from your own student training run.
 
+## Community projects
+
+- **[PHP on mjlab](https://github.com/yhx1203/parkour_mjlab)** —
+  A community port by [@yhx1203](https://github.com/yhx1203).
+  See [the announcement and videos](https://github.com/amazon-far/php_parkour/issues/3).
+
 ## Citation
 
 ```bibtex
