@@ -444,6 +444,7 @@ def test_student_eval_closes_simulation_after_checkpoint_error(tmp_path, monkeyp
     app = object()
     closed = []
     config = SimpleNamespace(
+        simulator=SimpleNamespace(_target_="fake"),
         logger=None, training=SimpleNamespace(max_eval_steps=1),
         algo=SimpleNamespace(_target_="fake", config=object()),
         save_config=lambda path: None,
