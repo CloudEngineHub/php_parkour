@@ -23,6 +23,7 @@ from holosoma.utils.sim_utils import setup_simulator_imports
 from holosoma.utils.tyro_utils import TYRO_CONIFG
 
 from wbt_training.config_values.experiment import AnnotatedExperimentConfig
+from wbt_training.utils.isaacsim_clock import use_php_isaacsim
 
 
 def _stagger_multi_gpu_init() -> None:
@@ -137,6 +138,7 @@ def main() -> None:
     os.environ.setdefault("LOGURU_LEVEL", "WARNING")
     _stagger_multi_gpu_init()
     tyro_cfg = tyro.cli(AnnotatedExperimentConfig, config=TYRO_CONIFG)
+    tyro_cfg = use_php_isaacsim(tyro_cfg)
     setup_simulator_imports(tyro_cfg)
 
     if os.environ.get("INIT_MODE", "stagger") == "sequential":

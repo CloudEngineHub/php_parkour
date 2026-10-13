@@ -36,6 +36,7 @@ from wbt_training.utils.checkpoint import (
     resolve_checkpoint_reference,
 )
 from wbt_training.utils.exporter import export_depth_student_bundle
+from wbt_training.utils.isaacsim_clock import use_php_isaacsim
 
 
 def _parse_export_config(
@@ -88,6 +89,7 @@ def _export(
     if config.training.checkpoint is None:
         raise ValueError("--training.checkpoint is required for export")
 
+    config = use_php_isaacsim(config)
     simulation_app = init_sim_imports(config)
     try:
         import torch

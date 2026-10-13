@@ -48,6 +48,7 @@ from wbt_training.utils.checkpoint import (
 from wbt_training.utils.checkpoint import (
     load_saved_experiment_config as _load_saved_experiment_config_prefer_pt,
 )
+from wbt_training.utils.isaacsim_clock import use_php_isaacsim
 
 
 @dataclass(frozen=True)
@@ -210,6 +211,7 @@ def run_eval(
     # construction. The saved checkpoint's config still points at the *training*
     # run's tempfile (e.g. /tmp/tmpXXXX.obj), which no longer exists at eval
     # time. Re-running the hook regenerates one.
+    tyro_config = use_php_isaacsim(tyro_config)
     tyro_config = apply_preprocess_hook(tyro_config)
 
     env, device, simulation_app = setup_simulation_environment(tyro_config)

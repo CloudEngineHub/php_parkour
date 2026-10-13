@@ -60,6 +60,7 @@ from wbt_training.utils.checkpoint import (
 from wbt_training.utils.checkpoint import (
     load_saved_experiment_config as _load_saved_experiment_config_prefer_pt,
 )
+from wbt_training.utils.isaacsim_clock import use_php_isaacsim
 
 
 def run_eval(
@@ -69,6 +70,7 @@ def run_eval(
     saved_wandb_path: str | None,
     eval_cbs_cfg: EvalCallbacksConfig | None = None,
 ) -> None:
+    tyro_config = use_php_isaacsim(tyro_config)
     tyro_config = apply_preprocess_hook(tyro_config)
 
     viewer = tyro_config.simulator.config.viewer
