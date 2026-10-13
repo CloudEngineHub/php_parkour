@@ -31,11 +31,17 @@ One upstream metadata conflict remains: IsaacSim 5.1 pins
 The tested runtime uses the newer version; `pip check` can report that conflict.
 The installer does not modify third-party metadata to conceal it.
 
-The training and evaluation launchers default to W&B logging (`LOGGER=wandb`).
-Authenticate with your own account using `wandb login`. Set `LOGGER=disabled`
-for local-only logging; checkpoints go under `logs/`. The Python training
-presets also default to W&B; use `logger:disabled` when invoking Python directly.
-Set `WANDB_BASE_URL` if you use a custom W&B server.
+All PHP training uses W&B by default: teacher training, pure DAgger student
+distillation (`FINETUNE=0`), and DAgger + PPO fine-tuning (`FINETUNE=1`), on one
+or multiple GPUs. This applies to both shell launchers (`LOGGER=wandb`) and all
+Python training presets, whether datasets and checkpoints are local or from W&B.
+Evaluation launchers also default to W&B.
+
+Authenticate with your own account using `wandb login`; set `WANDB_BASE_URL`
+first if you use a custom W&B server. For explicitly requested local-only
+logging, set `LOGGER=disabled` (or pass `logger:disabled` when invoking Python
+directly). Checkpoints then remain under `logs/` unless you choose another
+output directory.
 
 ## Example motion/terrain datasets
 
@@ -74,12 +80,14 @@ into a student. To generate different motions, follow the [motion-matching guide
 
 ## Train a teacher
 
-After downloading an [example dataset](#example-motionterrain-datasets), point
-`REGISTRY` at its directory:
+After downloading an [example dataset](#example-motionterrain-datasets),
+authenticate with W&B and point `REGISTRY` at its directory:
 
 ```bash
+wandb login
+
 REGISTRY="file://$HOME/.cache/php-parkour/motions-locomotion" \
-LOGGER=disabled NGPUS=1 \
+NGPUS=1 \
 bash wbt_training/training_runs/run_terrain_teacher.sh \
     --training.headless True --training.num-envs 4096 \
     --training.name example-locomotion-teacher
@@ -89,8 +97,9 @@ Use `motions-low-step`, `motions-high-step`, `motions-low-climb-76`, or
 `motions-high-climb-76` in both the download command and directory to train the
 other skills. Train one teacher for each dataset you want the student to learn.
 These bundles already contain the native Holosoma motion fields, so no conversion
-or W&B dataset lookup is needed. `LOGGER=disabled` also disables W&B run logging;
-omit it to use the default W&B logger after `wandb login`.
+or W&B dataset lookup is needed. Training metrics and checkpoints are logged to
+W&B by default, including when the dataset comes from a local `file://` directory.
+Set `LOGGER=disabled` only when you explicitly want local-only logging.
 
 For data you prepared yourself, set `REGISTRY=file:///absolute/path/to/bundle`.
 The directory must contain native Holosoma motion NPZ files and their matching
